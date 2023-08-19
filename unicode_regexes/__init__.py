@@ -1,6 +1,6 @@
 import re
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 
 def regex_unicode_char_literal(c):
