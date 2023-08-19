@@ -3,7 +3,7 @@ import re
 __version__ = "0.1.0"
 
 
-def wide_unicode_char_literal(c):
+def regex_unicode_char_literal(c):
     return (
         "\\u{}".format(c.lower())
         if len(c) < 5
@@ -15,7 +15,7 @@ def regex_char_range(match):
     # Wide version
     return "-".join(
         [
-            wide_unicode_char_literal(c)
+            regex_unicode_char_literal(c)
             for c in r
         ]
     )
@@ -27,7 +27,7 @@ def regex_multi_chars(match):
         "(?:",
         "".join(
         [
-            wide_unicode_char_literal(c)
+            regex_unicode_char_literal(c)
             for c in r
         ]),
         ")"
