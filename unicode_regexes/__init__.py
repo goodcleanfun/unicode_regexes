@@ -1,6 +1,6 @@
 import re
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 
 
 def regex_to_int(c):
