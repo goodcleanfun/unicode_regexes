@@ -1,0 +1,83 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "unicode_regexes"
+dynamic = ["version"]
+description = "Common code for parsing Unicode data and building regexes for tokenizers"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.8"
+authors = [
+    { name = "Al Barrentine" },
+]
+keywords = [
+    "unicode",
+    "regex",
+    "tokenizer"
+]
+classifiers = [
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+dependencies = []
+
+[bumpver]
+current_version = "0.0.0"
+version_pattern = "MAJOR.MINOR.PATCH"
+commit_message = "Bump version: {old_version} → {new_version}"
+tag_message = "{new_version}"
+tag_scope = "default"
+commit = true
+tag = true
+push = false
+
+[bumpver.file_patterns]
+"unicode_regexes/__init__.py" = [
+    '__version__ = "{version}"',
+]
+"pyproject.toml" = [
+    'current_version = "{version}"',
+]
+
+[project.urls]
+Homepage = "https://github.com/goodcleanfun/unicode_regexes"
+Repository = "https://github.com/goodcleanfun/unicode_regexes"
+
+[tool.coverage.run]
+parallel = true
+source = [
+    "unicode_regexes"
+]
+context = '${CONTEXT}'
+
+
+[tool.ruff]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "C",  # flake8-comprehensions
+    "B",  # flake8-bugbear
+]
+ignore = [
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+]
+
+[tool.hatch.version]
+path = "unicode_regexes/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/unicode_regexes",
+]
