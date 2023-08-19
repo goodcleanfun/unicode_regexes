@@ -4,7 +4,7 @@ __version__ = "0.1.1"
 
 
 def regex_unicode_char_literal(c):
-    return (
+    return re.escape(
         "\\u{}".format(c.lower())
         if len(c) < 5
         else "\\U{}".format(c.lower().rjust(8, "0"))
