@@ -3,8 +3,19 @@ import re
 __version__ = "0.1.2"
 
 
+def regex_to_int(c):
+    return int(c, 16)
+
+def regex_to_chr(c):
+    return chr(regex_to_int(c))
+
 def regex_unicode_char_literal(c):
-    return re.escape(
+    ch = regex_to_chr(c)
+    escaped = re.escape(ch)
+    if escaped != ch:
+        return escaped
+
+    return (
         "\\u{}".format(c.lower())
         if len(c) < 5
         else "\\U{}".format(c.lower().rjust(8, "0"))
@@ -24,13 +35,11 @@ def regex_char_range(match):
 def regex_multi_chars(match):
     r = match.split(" ")
     return "".join([
-        "(?:",
         "".join(
         [
             regex_unicode_char_literal(c)
             for c in r
         ]),
-        ")"
     ])
 
 
