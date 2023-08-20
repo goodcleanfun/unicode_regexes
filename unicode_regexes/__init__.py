@@ -9,24 +9,61 @@ def regex_to_int(c):
 def regex_to_chr(c):
     return chr(regex_to_int(c))
 
-def regex_unicode_char_literal(c):
-    ch = regex_to_chr(c)
+
+def regex_unicode_char_literal(ch):
     escaped = re.escape(ch)
     if escaped != ch:
         return escaped
 
-    return (
-        "\\u{}".format(c.lower())
-        if len(c) < 5
-        else "\\U{}".format(c.lower().rjust(8, "0"))
-    )
+    return ch.encode('unicode_escape').decode()
+
+def regex_chars_to_ranges(chars, sorted=False):
+    char_set = set()
+    unique_chars = []
+    for c in chars:
+        if c not in char_set:
+            unique_chars.append(c)
+            char_set.add(c)
+
+    if not sorted:
+        unique_chars.sort(key=regex_to_int)
+
+    char_ranges = []
+    prev = None
+    start_range = None
+    end_range = None
+    n = len(unique_chars)
+    for i, c in enumerate(unique_chars):
+        current = regex_to_int(c)
+
+        if prev is not None and prev == current - 1:
+            if start_range is None:
+                start_range = regex_unicode_char_literal(chr(prev))
+            end_range = regex_unicode_char_literal(chr(current))
+            if i == n - 1:
+                char_ranges.append('-'.join([start_range, end_range]))
+                start_range = None
+                end_range = None
+        else:
+            if start_range is not None and end_range is not None:
+                char_ranges.append('-'.join([start_range, end_range]))
+            elif prev:
+                char_ranges.append(regex_unicode_char_literal(chr(prev)))
+
+            if i < n - 1:
+                start_range = regex_unicode_char_literal(chr(current))
+                end_range = None
+            else:
+                char_ranges.append(regex_unicode_char_literal(chr(current)))
+        prev = current
+    return char_ranges
 
 def regex_char_range(match):
     r = match.split("..")
     # Wide version
     return "-".join(
         [
-            regex_unicode_char_literal(c)
+            regex_unicode_char_literal(regex_to_chr(c))
             for c in r
         ]
     )
@@ -37,7 +74,7 @@ def regex_multi_chars(match):
     return "".join([
         "".join(
         [
-            regex_unicode_char_literal(c)
+            regex_unicode_char_literal(regex_to_chr(c))
             for c in r
         ]),
     ])
